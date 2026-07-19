@@ -21,16 +21,42 @@ const ICONS = {
   announced: makeIcon('announced'),
 }
 
-export default function MapView({ sites }) {
+export default function MapView({ sites, allCompanies, companies, setCompanies }) {
   const withCoords = sites.filter((s) => typeof s.lat === 'number' && typeof s.lng === 'number')
 
+  function toggleCompany(company) {
+    const next = new Set(companies)
+    if (next.has(company)) next.delete(company)
+    else next.add(company)
+    setCompanies(next)
+  }
+
   return (
-    <MapContainer center={[30, -20]} zoom={2} minZoom={2} className="map-container">
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <MarkerClusterGroup chunkedLoading>
+    <div className="map-wrapper">
+      <div className="map-company-toggle">
+        {allCompanies.map((company) => (
+          <button
+            key={company}
+            className={companies.size === 0 || companies.has(company) ? 'active' : ''}
+            onClick={() => toggleCompany(company)}
+          >
+            {company}
+          </button>
+        ))}
+        {companies.size > 0 && (
+          <button className="reset-btn" onClick={() => setCompanies(new Set())}>
+            전체
+          </button>
+        )}
+      </div>
+      <MapContainer center={[30, -20]} zoom={2} minZoom={2} className="map-container">
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          subdomains="abcd"
+          maxZoom={20}
+        />
+        <MarkerClusterGroup chunkedLoading>
         {withCoords.map((site) => (
           <Marker key={site.id} position={[site.lat, site.lng]} icon={ICONS[site.status] || ICONS.announced}>
             <Popup>
@@ -71,7 +97,8 @@ export default function MapView({ sites }) {
             </Popup>
           </Marker>
         ))}
-      </MarkerClusterGroup>
-    </MapContainer>
+        </MarkerClusterGroup>
+      </MapContainer>
+    </div>
   )
 }

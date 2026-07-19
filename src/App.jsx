@@ -55,7 +55,16 @@ export default function App() {
           resultCount={filtered.length}
         />
         <main className="app-main">
-          {view === 'map' ? <MapView sites={filtered} /> : <TableView sites={filtered} />}
+          {view === 'map' ? (
+            <MapView
+              sites={filtered}
+              allCompanies={allCompanies}
+              companies={companies}
+              setCompanies={setCompanies}
+            />
+          ) : (
+            <TableView sites={filtered} />
+          )}
         </main>
       </div>
     </div>
