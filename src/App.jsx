@@ -22,6 +22,26 @@ export default function App() {
     [sites, companies, statuses, search],
   )
 
+  // Ignores the status checkboxes so per-status totals stay comparable no matter which are checked.
+  const byCompanyAndSearch = useMemo(
+    () => filterSites(sites, { companies, statuses: new Set(), search }),
+    [sites, companies, search],
+  )
+
+  const statusTotals = useMemo(() => {
+    const totals = {}
+    for (const site of byCompanyAndSearch) {
+      if (!site.investment_usd) continue
+      totals[site.status] = (totals[site.status] || 0) + Number(site.investment_usd)
+    }
+    return totals
+  }, [byCompanyAndSearch])
+
+  const totalCapacityMw = useMemo(
+    () => byCompanyAndSearch.reduce((sum, site) => sum + (Number(site.capacity_mw) || 0), 0),
+    [byCompanyAndSearch],
+  )
+
   return (
     <div className="app">
       <header className="app-header">
@@ -53,6 +73,8 @@ export default function App() {
           search={search}
           setSearch={setSearch}
           resultCount={filtered.length}
+          statusTotals={statusTotals}
+          totalCapacityMw={totalCapacityMw}
         />
         <main className="app-main">
           {view === 'map' ? (

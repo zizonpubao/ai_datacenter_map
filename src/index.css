@@ -112,6 +112,22 @@ body {
   cursor: pointer;
 }
 
+.filter-checkbox-label {
+  flex: 1;
+}
+
+.filter-checkbox-total {
+  color: #667085;
+  font-size: 12px;
+}
+
+.total-capacity {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #344054;
+}
+
 .company-list {
   max-height: 240px;
   overflow-y: auto;

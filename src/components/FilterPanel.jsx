@@ -1,4 +1,4 @@
-import { STATUS_META, STATUS_ORDER } from '../utils/constants'
+import { STATUS_META, STATUS_ORDER, formatUsd, formatMw } from '../utils/constants'
 
 export default function FilterPanel({
   allCompanies,
@@ -9,6 +9,8 @@ export default function FilterPanel({
   search,
   setSearch,
   resultCount,
+  statusTotals,
+  totalCapacityMw,
 }) {
   function toggleCompany(company) {
     const next = new Set(companies)
@@ -44,7 +46,10 @@ export default function FilterPanel({
               onChange={() => toggleStatus(key)}
             />
             <span className="status-dot" style={{ '--badge-color': STATUS_META[key].color }} />
-            {STATUS_META[key].label}
+            <span className="filter-checkbox-label">{STATUS_META[key].label}</span>
+            {(key === 'under_construction' || key === 'announced') && (
+              <span className="filter-checkbox-total">{formatUsd(statusTotals?.[key])}</span>
+            )}
           </label>
         ))}
         {statuses.size > 0 && (
@@ -52,6 +57,7 @@ export default function FilterPanel({
             전체 해제
           </button>
         )}
+        <div className="total-capacity">전체 전력량: {formatMw(totalCapacityMw)}</div>
       </div>
 
       <div className="filter-group">
