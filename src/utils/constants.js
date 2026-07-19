@@ -17,5 +17,8 @@ export function formatUsd(value) {
 
 export function formatMw(value) {
   if (value === null || value === undefined || value === '') return '-'
-  return `${Number(value).toLocaleString()} MW`
+  const n = Number(value)
+  if (Number.isNaN(n)) return '-'
+  if (n >= 1000) return `${(n / 1000).toFixed(1)} GW`
+  return `${n.toLocaleString()} MW`
 }
