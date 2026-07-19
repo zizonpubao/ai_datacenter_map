@@ -19,6 +19,5 @@ export function formatMw(value) {
   if (value === null || value === undefined || value === '') return '-'
   const n = Number(value)
   if (Number.isNaN(n)) return '-'
-  if (n >= 1000) return `${(n / 1000).toFixed(1)} GW`
-  return `${n.toLocaleString()} MW`
+  return `${(n / 1000).toFixed(2)} GW`
 }
